@@ -85,6 +85,29 @@ func TestRepeatNfa(t *testing.T) {
 	}
 }
 
+func TestGroupNfa(t *testing.T) {
+	data := []struct {
+		match_regex string
+		to_match    string
+		validity    bool
+	}{
+		{match_regex: `(a|c)`, to_match: "a", validity: true},
+		{match_regex: `(a|c)`, to_match: "c", validity: true},
+	}
+
+	for _, instance := range data {
+		ctx := parse(instance.match_regex)
+		nfa := toNfa(ctx)
+		t.Run(fmt.Sprintf("Test: '%s'", instance.to_match), func(t *testing.T) {
+			result := nfa.check(instance.to_match, -1)
+			if result != instance.validity {
+				t.Logf("Expect: %t, got %t\n", instance.validity, result)
+				t.Fail()
+			}
+		})
+	}
+}
+
 func TestComboNfa(t *testing.T) {
 	data := []struct {
 		match_regex string

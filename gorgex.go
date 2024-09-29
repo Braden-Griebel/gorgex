@@ -85,10 +85,7 @@ func process(regex string, ctx *parseContext) {
 }
 
 func parseGroup(regex string, ctx *parseContext) {
-	ctx.pos += 1
-	// Loop until hitting a right paren (this will
-	// work with nested parens, as those will induce a
-	// recursive call to this function)
+	ctx.pos += 1 // get past the LPAREN (
 	for regex[ctx.pos] != ')' {
 		process(regex, ctx)
 		ctx.pos += 1
@@ -152,9 +149,6 @@ func parseOr(regex string, ctx *parseContext) {
 		value:     rhsContext.tokens,
 	}
 
-	if regex[rhsContext.pos] == ')' {
-		rhsContext.pos--
-	}
 	ctx.pos = rhsContext.pos
 
 	ctx.tokens = []token{{
